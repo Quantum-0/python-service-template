@@ -10,13 +10,13 @@ init(autoreset=True)
 if __name__ == '__main__':
     print(Fore.BLUE + 'Welcome to python service installation script made by Quantum0')
 
-    print('Check OS as Linux: ', end='')
+    print('Check OS is Linux: ', end='')
     if platform.system() != 'Linux':
         print(Fore.RED + "FAIL")
         exit(1)
     print(Fore.GREEN + "OK")
 
-    print('Check running on root: ', end='')
+    print('Check running as root: ', end='')
     if os.getuid() != 0:
         print(Fore.RED + "FAIL")
         exit(2)
