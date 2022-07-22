@@ -66,7 +66,7 @@ if __name__ == '__main__':
     service_file = f'''[Unit]
     Description={service_name}
     After=network.target
-    
+
     [Service]
     Type=simple
     WorkingDirectory={working_dir}
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     EnvironmentFile={working_dir}/.env
     StandardOutput=/var/{service_name}.output.log
     StandardError=/var/{service_name}.error.log
-    
+
     [Install]
     WantedBy=multi-user.target
     '''
@@ -120,4 +120,39 @@ if __name__ == '__main__':
 
     print(Fore.BLUE + 'Service is installed.\nNow you can start it with:\n>', end='')
     print(Fore.GREEN + f'systemctl start {service_name}')
+
+    # Check for flask
+    working_dir = '/home/quantum0/Repositories/python-service-template/'
+    service_name = '123'
+    with open(f'{working_dir}/requirements.txt', 'r') as f:
+        req_data = f.read()
+    if 'flask' not in req_data and 'Flask' not in req_data:
+        # exit(0)
+        pass
+
+    print('\n\nFlask was found in the project')
+    with open(f'{working_dir}/src/main.py', 'r') as f:
+        main_text = f.read()
+    if 'Flask' in main_text:
+        import re
+        flask_match = re.search(r"(\w+) ?= ?Flask.*\1\.run\(.*port=(\d+).*\)", main_text, flags=re.S)
+        if flask_match:
+            flask_port = flask_match.group(2)
+            print('Port: ' + Fore.GREEN + flask_port)
+        else:
+            print('Cannot find port automatically, please define it: ', end='')
+            flask_port = input()
+    print('Hostname: ', end='')
+    flask_hostname = input()
+    with open(f'{working_dir}/install/nginx.template', 'r') as f:
+        nginx_template = f.read()
+    with open(f'{working_dir}/nginx-config', 'w+') as f:
+        f.write(nginx_template.replace('%HOSTNAME%', flask_hostname)\
+            .replace('%PORT%', flask_port)\
+            .replace('%SERVICENAME%', service_name)
+        )
+    print('Nginx config file generated')
+    os.system(f'ln -s {working_dir}/nginx-config /etc/nginx/sites-available/{flask_hostname}')
+    os.system(f'ln -s {working_dir}/nginx-config /etc/nginx/sites-enabled/{flask_hostname}')
+    os.system('systemctl restart nginx')
     exit(0)
