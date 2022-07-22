@@ -132,6 +132,7 @@ if __name__ == '__main__':
         main_text = f.read()
     if 'Flask' in main_text:
         import re
+
         flask_match = re.search(r"(\w+) ?= ?Flask.*\1\.run\(.*port=(\d+).*\)", main_text, flags=re.S)
         if flask_match:
             flask_port = flask_match.group(2)
@@ -144,8 +145,9 @@ if __name__ == '__main__':
     with open(f'{working_dir}/install/nginx.template', 'r') as f:
         nginx_template = f.read()
     with open(f'{working_dir}/nginx-config', 'w+') as f:
-        f.write(nginx_template.replace('%HOSTNAME%', flask_hostname)\
-            .replace('%PORT%', flask_port)\
+        f.write(
+            nginx_template.replace('%HOSTNAME%', flask_hostname)
+            .replace('%PORT%', flask_port)
             .replace('%SERVICENAME%', service_name)
         )
     os.system(f'ln -s {working_dir}/nginx-config /etc/nginx/sites-available/{flask_hostname}')
