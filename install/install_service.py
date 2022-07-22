@@ -23,7 +23,7 @@ if __name__ == '__main__':
     print(Fore.GREEN + "OK")
 
     print('Check we are in /opt : ', end='')
-    if os.path.abspath(__file__).startswith('/opt/'):
+    if not os.path.abspath(__file__).startswith('/opt/'):
         print(Fore.RED + "FAIL")
         exit(3)
     print(Fore.GREEN + "OK")
