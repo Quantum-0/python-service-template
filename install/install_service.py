@@ -4,6 +4,7 @@ import platform
 import sys
 import os
 from colorama import init, Fore
+
 init(autoreset=True)
 
 if __name__ == '__main__':
@@ -36,9 +37,16 @@ if __name__ == '__main__':
     working_dir = '/'.join(os.path.abspath(__file__).split('/')[:-2])
 
     print('Installing venv and requirements: ', end='')
-    if os.system(f'cd {working_dir} && pip install virtualenv > /dev/null && '
-            f'virtualenv venv > /dev/null && . venv/bin/activate > /dev/null && '
-            f'pip install -r requirements.txt > /dev/null') != 0:
+    if (
+        os.system(
+            f'cd {working_dir} && '
+            f'pip install virtualenv > /dev/null && '
+            f'virtualenv venv > /dev/null && '
+            f'. venv/bin/activate > /dev/null && '
+            f'pip install -r requirements.txt > /dev/null'
+        )
+        != 0
+    ):
         print(Fore.RED + "FAIL")
         exit(5)
     print(Fore.GREEN + "OK")
@@ -110,5 +118,6 @@ if __name__ == '__main__':
         print(Fore.RED + "FAIL")
         exit(10)
 
-    print(Fore.BLUE + 'Service is installed.\nNow you can start it with:\n> ' + Fore.GREEN + f'systemctl start {service_name}')
+    print(Fore.BLUE + 'Service is installed.\nNow you can start it with:\n>', end='')
+    print(Fore.GREEN + f'systemctl start {service_name}')
     exit(0)
