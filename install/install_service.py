@@ -74,8 +74,8 @@ if __name__ == '__main__':
     Restart=on-failure
     ExecStart={sys.executable} {working_dir}/src/main.py
     EnvironmentFile={working_dir}/.env
-    StandardOutput=/var/{service_name}.output.log
-    StandardError=/var/{service_name}.error.log
+    StandardOutput=/var/log/{service_name}.output.log
+    StandardError=/var/log/{service_name}.error.log
 
     [Install]
     WantedBy=multi-user.target
